@@ -98,11 +98,10 @@ class SparkExercise(path: String, cores: Int, outputFile: String) extends Serial
       * Saves the computed Inclusion Dependencies.
       */
     def saveOutput(): Unit = {
-//        inclusionDependencies.saveAsTextFile(s"$outputFile${System.currentTimeMillis()}")
         val writer = new PrintWriter(outputFile)
         inclusionDependencies
             .collect()
-            .foreach(writer.write)
+            .foreach(line => writer.write(line + "\n"))
         writer.close()
     }
 
