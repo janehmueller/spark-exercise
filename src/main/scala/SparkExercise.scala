@@ -3,8 +3,11 @@ import org.apache.spark.sql.SparkSession
 
 object SparkExercise {
     def main(args: Array[String]): Unit = {
-
-        val sparkJob = new SparkExercise("", 0)
+        val conf = new CLIConf(args)
+        val path = conf.path.getOrElse("./TPCH")
+        val cores = conf.cores.getOrElse(4)
+        val sparkJob = new SparkExercise(path, cores)
+        sparkJob.run()
     }
 }
 
