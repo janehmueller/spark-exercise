@@ -13,6 +13,16 @@ libraryDependencies ++= Seq(
 // mute assembly merge warnings
 logLevel in assembly := Level.Error
 
+// fat jar assembly settings
+assemblyMergeStrategy in assembly := {
+    case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+    case PathList(ps @ _*) if ps.last endsWith "pom.properties" => MergeStrategy.discard
+    case _ => MergeStrategy.first
+}
+
+// disables testing for assembly
+test in assembly := {}
+
 // set main class in manifest
 mainClass in Compile := Option("SparkExercise")
 mainClass in assembly := Option("SparkExercise")

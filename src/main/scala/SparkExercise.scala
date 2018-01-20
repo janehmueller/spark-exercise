@@ -1,3 +1,5 @@
+import java.io.PrintWriter
+
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 
@@ -6,12 +8,13 @@ object SparkExercise {
         val conf = new CLIConf(args)
         val path = conf.path.getOrElse("./TPCH")
         val cores = conf.cores.getOrElse(4)
-        val sparkJob = new SparkExercise(path, cores)
+        val outputFile = conf.outputFile.getOrElse("inclusion_dependencies")
+        val sparkJob = new SparkExercise(path, cores, outputFile)
         sparkJob.run()
     }
 }
 
-class SparkExercise(path: String, cores: Int) extends Serializable {
+class SparkExercise(path: String, cores: Int, outputFile: String) extends Serializable {
     // input
     var customerCSV: RDD[(String, String, String, String, String, String, String, String)] = _
     var lineitemCSV: RDD[(String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String)] = _
@@ -95,7 +98,12 @@ class SparkExercise(path: String, cores: Int) extends Serializable {
       * Saves the computed Inclusion Dependencies.
       */
     def saveOutput(): Unit = {
-        inclusionDependencies.saveAsTextFile(s"inclusion_dependencies_${System.currentTimeMillis()}")
+//        inclusionDependencies.saveAsTextFile(s"$outputFile${System.currentTimeMillis()}")
+        val writer = new PrintWriter(outputFile)
+        inclusionDependencies
+            .collect()
+            .foreach(writer.write)
+        writer.close()
     }
 
     /**
