@@ -15,6 +15,7 @@ logLevel in assembly := Level.Error
 
 // fat jar assembly settings
 assemblyMergeStrategy in assembly := {
+    case PathList("META-INF", "services", "org.apache.hadoop.fs.FileSystem") => MergeStrategy.filterDistinctLines
     case PathList("META-INF", xs @ _*) => MergeStrategy.discard
     case PathList(ps @ _*) if ps.last endsWith "pom.properties" => MergeStrategy.discard
     case _ => MergeStrategy.first
